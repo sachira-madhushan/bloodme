@@ -1,4 +1,5 @@
 import 'package:bloodme/screens/login.dart';
+import 'package:bloodme/screens/signin2.dart';
 import 'package:flutter/material.dart';
 
 class Signin extends StatefulWidget {
@@ -13,184 +14,171 @@ class _SigninState extends State<Signin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(1, 9, 25, 1)!,
       body: SafeArea(
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(
-            children: [
-              // Image.asset(
-              //   "assets/images/Login.png",
-              //   width: 300,
-              // ),
-              Container(
-                height: 70,
-              ),
-              Center(
-                child: Text(
-                  "Signin",
-                  style: TextStyle(color: Colors.red, fontSize: 30),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "Full Name",
-                        prefixIcon: Icon(Icons.supervisor_account_sharp),
-                        border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple)))),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "Email",
-                        prefixIcon: Icon(Icons.email),
-                        border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple)))),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "Phone Number",
-                        prefixIcon: Icon(Icons.phone),
-                        border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple)))),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "NIC",
-                        prefixIcon: Icon(Icons.perm_identity),
-                        border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple)))),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "Blood Group",
-                        prefixIcon: Icon(Icons.bloodtype),
-                        border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple)))),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                    obscureText: !_visibility,
-                    decoration: InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _visibility = !_visibility;
-                              });
-                            },
-                            icon: Icon(_visibility
-                                ? Icons.visibility
-                                : Icons.visibility_off)),
-                        border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple)))),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: TextField(
-                    obscureText: !_visibility,
-                    decoration: InputDecoration(
-                        hintText: "Confirm Password",
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _visibility = !_visibility;
-                              });
-                            },
-                            icon: Icon(_visibility
-                                ? Icons.visibility
-                                : Icons.visibility_off)),
-                        border: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.purple)))),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text("Signin"),
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      padding: EdgeInsets.all(5),
-                      minimumSize: Size(370, 50)),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 1, 20, 1),
+        child: Stack(children: [
+          Positioned(
+              left: 175,
+              top: 100,
+              child: Image.asset("assets/images/Logo.png")),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: SingleChildScrollView(
                 child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: Colors.black12,
-                ),
-              ),
-              Container(
-                color: Colors.black12,
-                child: Text(
-                  "or",
-                  style: TextStyle(
-                    color: Colors.black,
-                    backgroundColor: Colors.white,
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(26, 34, 48, 1),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(50),
+                          topRight: Radius.circular(50))),
+                  //padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  height: 450,
+
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Center(
+                          child: Text(
+                            "Sign Up",
+                            style:
+                                TextStyle(color: Colors.orange, fontSize: 30),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Column(children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                            child: TextField(
+                                style: TextStyle(color: Colors.white70),
+                                decoration: InputDecoration(
+                                    hintText: "Full Name",
+                                    hintStyle: TextStyle(color: Colors.white54),
+                                    prefixIconColor: Colors.white,
+                                    prefixIcon:
+                                        Icon(Icons.supervisor_account_sharp),
+                                    border: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.purple)))),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                            child: TextField(
+                                style: TextStyle(color: Colors.white70),
+                                decoration: InputDecoration(
+                                    hintText: "NIC",
+                                    hintStyle: TextStyle(color: Colors.white54),
+                                    prefixIconColor: Colors.white,
+                                    prefixIcon: Icon(Icons.perm_identity),
+                                    border: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.purple)))),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                            child: TextField(
+                                style: TextStyle(color: Colors.white70),
+                                decoration: InputDecoration(
+                                    hintText: "Blood Group",
+                                    hintStyle: TextStyle(color: Colors.white54),
+                                    prefixIconColor: Colors.white,
+                                    prefixIcon: Icon(Icons.bloodtype),
+                                    border: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.purple)))),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation,
+                                        secondaryAnimation) {
+                                      return Signin2();
+                                    },
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      const begin = Offset(0.0, 1.0);
+                                      const end = Offset.zero;
+                                      const curve = Curves.easeInOut;
+
+                                      var tween = Tween(begin: begin, end: end)
+                                          .chain(CurveTween(curve: curve));
+
+                                      var offsetAnimation =
+                                          animation.drive(tween);
+
+                                      return SlideTransition(
+                                        position: offsetAnimation,
+                                        child: child,
+                                      );
+                                    },
+                                    transitionDuration:
+                                        Duration(milliseconds: 500),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Next",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.orange,
+                                  padding: EdgeInsets.all(5),
+                                  minimumSize: Size(370, 50)),
+                            ),
+                          ),
+                        ]),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(20),
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) {
+                                  return Login();
+                                },
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  const begin = Offset(0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.easeInOut;
+
+                                  var tween = Tween(begin: begin, end: end)
+                                      .chain(CurveTween(curve: curve));
+
+                                  var offsetAnimation = animation.drive(tween);
+
+                                  return SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  );
+                                },
+                                transitionDuration: Duration(milliseconds: 500),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Already Have An Account",
+                            style: TextStyle(color: Colors.orange[300]!),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              //primary: Colors.white,
+                              padding: EdgeInsets.all(5),
+                              minimumSize: Size(370, 50)),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 1, 20, 1),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: Colors.black12,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return Login();
-                        },
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(0.0, 1.0);
-                          const end = Offset.zero;
-                          const curve = Curves.easeInOut;
-
-                          var tween = Tween(begin: begin, end: end)
-                              .chain(CurveTween(curve: curve));
-
-                          var offsetAnimation = animation.drive(tween);
-
-                          return SlideTransition(
-                            position: offsetAnimation,
-                            child: child,
-                          );
-                        },
-                        transitionDuration: Duration(milliseconds: 500),
-                      ),
-                    );
-                  },
-                  child: Text("Login"),
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      padding: EdgeInsets.all(5),
-                      minimumSize: Size(370, 50)),
-                ),
-              ),
-            ],
-          ),
-        ),
+              )),
+        ]),
       ),
     );
   }

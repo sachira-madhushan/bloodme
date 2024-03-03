@@ -63,6 +63,10 @@ flutter:
     - assets/images/Login.png
     - assets/images/hand.png
     - assets/images/blood.png
+    - assets/images/Doc.png
+    - assets/images/Logo.png
+    - assets/images/facebook.png
+    - assets/images/whatsapp.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

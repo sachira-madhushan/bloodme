@@ -1,6 +1,8 @@
 import 'package:bloodme/screens/home.dart';
 import 'package:bloodme/screens/login.dart';
 import 'package:bloodme/screens/signin.dart';
+import 'package:bloodme/screens/donerProfile.dart';
+import 'package:bloodme/screens/post.dart';
 import 'package:bloodme/screens/splash.dart';
 import 'package:flutter/material.dart';
 

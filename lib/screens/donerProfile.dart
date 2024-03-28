@@ -8,6 +8,11 @@ class DonerProfile extends StatefulWidget {
 }
 
 class _DonerProfileState extends State<DonerProfile> {
+  
+  
+  
+  
+  //meke calls
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +25,7 @@ class _DonerProfileState extends State<DonerProfile> {
                 Positioned(
                     child: Container(
                   width: 150,
-                  height: 200,
+                  height: 250,
                   decoration: BoxDecoration(
                       color: Color.fromRGBO(26, 34, 48, 1),
                       borderRadius: BorderRadius.only(
@@ -28,14 +33,14 @@ class _DonerProfileState extends State<DonerProfile> {
                           bottomRight: Radius.circular(100))),
                 )),
                 Positioned(
-                    top: 25,
-                    left: 40,
+                    top: 100,
+                    left: 35,
                     child: Text(
                       "Doner",
                       style: TextStyle(color: Colors.orange, fontSize: 25),
                     )),
                 Positioned(
-                    top: 80,
+                    top: 150,
                     left: 30,
                     child: CircleAvatar(
                       radius: 45,
@@ -201,7 +206,9 @@ class _DonerProfileState extends State<DonerProfile> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

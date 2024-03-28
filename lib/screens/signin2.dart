@@ -111,7 +111,7 @@ class _SigninState2 extends State<Signin2> {
                             child: ElevatedButton(
                               onPressed: () {},
                               child: Text(
-                                "Login",
+                                "Sign Up",
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(

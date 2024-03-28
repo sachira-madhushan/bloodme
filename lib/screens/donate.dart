@@ -82,7 +82,7 @@ class _DonateState extends State<Donate> {
   final List<String> blood = ["AB-", "O+"];
   final List<String> city = ["Polonnaruwa", "Medirigiriya"];
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
@@ -108,7 +108,7 @@ class _DonateState extends State<Donate> {
         ),
         child: Column(children: [
           Container(
-            height: 280,
+            height: 320,
             decoration: BoxDecoration(
                 color: Color.fromRGBO(26, 34, 48, 1),
                 borderRadius: BorderRadius.circular(20)),
@@ -116,10 +116,10 @@ class _DonateState extends State<Donate> {
               children: [
                 Row(children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                    padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
                     child: Positioned(
                       top: 0,
-                      left: 50,
+                      left: 0,
                       child: Text(
                         "Let's Find \nYour Doner!",
                         style: TextStyle(color: Colors.white, fontSize: 24),
@@ -129,14 +129,14 @@ class _DonateState extends State<Donate> {
                   ),
                   Positioned(
                       top: 0,
-                      left: 10,
+                      left: 0,
                       child: Image.asset("assets/images/Doc.png")),
                 ]),
                 Row(
                   children: [
                     DropdownButton(
                       dropdownColor: Color.fromRGBO(26, 34, 48, 1),
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                       value: selectedValue,
                       onChanged: (value) {
                         setState(() {
@@ -156,7 +156,7 @@ class _DonateState extends State<Donate> {
                     ),
                     DropdownButton(
                       dropdownColor: Color.fromRGBO(26, 34, 48, 1),
-                      padding: EdgeInsets.fromLTRB(2, 0, 0, 0),
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       value: selectedBlood,
                       onChanged: (value) {
                         setState(() {
@@ -174,16 +174,18 @@ class _DonateState extends State<Donate> {
                             ));
                       }).toList(),
                     ),
-                    Container(
-                        width: 100,
+                                      ],
+                ),
+                Container(
+                        width: 300,
                         decoration: BoxDecoration(
                             color: Colors.orange,
                             borderRadius: BorderRadius.circular(20)),
                         child: IconButton(
                             onPressed: () {}, icon: Icon(Icons.search)))
-                  ],
-                ),
+          
               ],
+              
             ),
           ),
           ListView.builder(

@@ -22,6 +22,8 @@ class _NotificationsState extends State<Notifications> {
           "Notifications",
           style: TextStyle(color: Colors.white),
         ),
+        
+        actions: [IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.white,))],
         backgroundColor: Colors.orange,
       ),
       body: ListView.builder(

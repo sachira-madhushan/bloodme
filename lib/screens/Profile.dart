@@ -21,20 +21,20 @@ class _ProfileState extends State<Profile> {
         children: [
           Positioned(
               top: 90,
-              left: 170,
+              left: 160,
               child: Column(
                 children: [Image.asset("assets/images/Logo.png")],
               )),
           Positioned(
               top: 180,
-              left: 45,
+              left: 22,
               child: Text(
                 "Your support means the world to us",
-                style: TextStyle(color: Colors.white70, fontSize: 20),
+                style: TextStyle(color: Colors.white70, fontSize: 18),
               )),
           Positioned(
             top: 220,
-            left: 140,
+            left: 125,
             child: ElevatedButton.icon(
                 onPressed: () {},
                 icon: Icon(Icons.handshake_outlined),
@@ -60,7 +60,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       //doner name
                       Text(
-                        "Hello Doner !",
+                        "Hello John !",
                         style: TextStyle(color: Colors.orange, fontSize: 20),
                       ),
                     ],

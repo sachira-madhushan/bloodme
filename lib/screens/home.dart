@@ -4,6 +4,8 @@ import 'package:bloodme/screens/signin.dart';
 import 'package:bloodme/screens/Profile.dart';
 import "package:flutter/material.dart";
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,6 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+
   final List<String> imageUrls = [
     'https://images.unsplash.com/photo-1615461066159-fea0960485d5?q=80&w=1916&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.unsplash.com/photo-1606206522398-de3bd05b1615?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -33,6 +37,15 @@ class _HomeState extends State<Home> {
     "Subtitle 04"
   ];
   final List<String> postImages = ["", ""];
+
+  @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [],
+    );
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +73,7 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Container(
                 // Change the color as needed
                 padding: EdgeInsets.all(16.0),
@@ -123,24 +136,28 @@ class _HomeState extends State<Home> {
                 items: imageUrls.map((url) {
                   return Builder(
                     builder: (BuildContext context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(horizontal: 1.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              url,
+                      return GestureDetector(
+                        onTap: () {
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 1.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                url,
+                              ),
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black45,
+                                  offset: Offset(0, 0),
+                                  blurRadius: 5)
+                            ],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black45,
-                                offset: Offset(0, 0),
-                                blurRadius: 5)
-                          ],
                         ),
                       );
                     },

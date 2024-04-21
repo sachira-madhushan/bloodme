@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bloodme/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:bloodme/screens/home.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -9,8 +13,85 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+
 class _LoginState extends State<Login> {
+
+  TextEditingController phone=TextEditingController();
+  TextEditingController password=TextEditingController();
   bool _visibility = false;
+
+  final Future<SharedPreferences> data=SharedPreferences.getInstance();
+
+
+  AwesomeDialog successDialog(){
+    return AwesomeDialog(
+            context: context,
+            dialogType: DialogType.info,
+            animType: AnimType.bottomSlide,
+            title: 'Login',
+            desc: 'Login Success!',
+            btnOkOnPress: () {
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>Home()));
+            },
+            );
+  }
+
+  AwesomeDialog nouserDialog(){
+    return AwesomeDialog(
+            context: context,
+            dialogType: DialogType.warning,
+            animType: AnimType.bottomSlide,
+            title: 'Error',
+            desc: 'Phone number or Password is incorrect!',
+            btnOkOnPress: () {},
+            );
+  }
+
+  AwesomeDialog failedDialog(){
+    return AwesomeDialog(
+
+            context: context,
+            dialogType: DialogType.warning,
+            animType: AnimType.bottomSlide,
+            title: 'Error',
+            desc: 'Register Failed!',
+            btnOkOnPress: () {},
+            );
+  }
+  Future<void> saveDate()async{
+    final prefs=await data;
+    prefs.setString("phone", phone.value.text.toString());
+    prefs.setString("password", password.value.text.toString());
+  }
+
+  Future<String> signUp()async{
+    String? awesomeDialog="";
+    final prefs=await data;
+    var url=Uri.parse("http://192.168.56.1:8080/bloodme/login.php");
+    var req = {
+            'Phone':prefs.getString("phone")!,
+            'Password': prefs.getString("password")!,};
+    var body = json.encode(req);
+    var response = await http.post(url, body: body);
+    var resultDecode=json.decode(response.body);
+    print(response.body);
+    if(response.statusCode==200){
+      if(resultDecode['result'].toString()=="success"){
+
+        //is user logged in?
+        prefs.setBool("LoggedIn", true);
+        prefs.setString("UserPhone",prefs.getString("phone")!);
+
+
+        awesomeDialog= "success";
+      }else if(resultDecode['result'].toString()=="nouser"){
+       awesomeDialog= "nouser";
+      }else if(resultDecode['result'].toString()=="failed"){
+        awesomeDialog="failed";
+      }
+    }
+    return awesomeDialog;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +130,7 @@ class _LoginState extends State<Login> {
                         padding: EdgeInsets.all(20),
                         child: Column(children: [
                           TextField(
+                              controller:phone,
                               style: TextStyle(color: Colors.white70),
                               decoration: InputDecoration(
                                   prefixIconColor: Colors.white,
@@ -61,6 +143,7 @@ class _LoginState extends State<Login> {
                           Padding(
                             padding: EdgeInsets.only(top: 20),
                             child: TextField(
+                              controller: password,
                                 style: TextStyle(color: Colors.white70),
                                 obscureText: !_visibility,
                                 decoration: InputDecoration(
@@ -93,17 +176,28 @@ class _LoginState extends State<Login> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Home()));
+                                saveDate();
+                                
+                                signUp().then((value){
+                                  if(value!=null){
+                                    if(value=="success"){
+                                      successDialog()..show();
+                                    }
+                                    else if (value=="failed"){
+                                      failedDialog()..show();
+                                    }else if(value=="nouser"){
+                                      nouserDialog()..show();
+                                    }
+                                  }
+                                });
                             },
                             child: Text(
                               "Login",
                               style: TextStyle(color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.orange,
+                                //primary: Colors.orange,
+                                backgroundColor:Colors.orange,
                                 padding: EdgeInsets.all(5),
                                 minimumSize: Size(370, 50)),
                           ),

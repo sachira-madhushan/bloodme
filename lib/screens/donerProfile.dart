@@ -223,7 +223,8 @@ class _DonerProfileState extends State<DonerProfile> {
                 ],
               ),
               style: ElevatedButton.styleFrom(
-                  primary: Colors.orange,
+                  //primary: Colors.orange,
+                  backgroundColor: Colors.orange,
                   //padding: EdgeInsets.all(5),
                   minimumSize: Size(370, 50)),
             ),

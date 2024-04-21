@@ -1,7 +1,8 @@
 import 'package:bloodme/screens/login.dart';
 import 'package:bloodme/screens/signin2.dart';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_android/shared_preferences_android.dart';
 class Signin extends StatefulWidget {
   const Signin({super.key});
 
@@ -11,6 +12,21 @@ class Signin extends StatefulWidget {
 
 class _SigninState extends State<Signin> {
   bool _visibility = false;
+
+  final Future<SharedPreferences> data=SharedPreferences.getInstance();
+  
+
+  Future<void> saveDate()async{
+    final prefs=await data;
+    prefs.setString("name", name.value.text.toString());
+    prefs.setString("nic", nic.value.text.toString());
+    prefs.setString("phone", phone.value.text.toString());
+  }
+
+  
+  TextEditingController name=TextEditingController();
+  TextEditingController nic=TextEditingController();
+  TextEditingController phone=TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +67,8 @@ class _SigninState extends State<Signin> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                             child: TextField(
+
+                                controller:name,
                                 style: TextStyle(color: Colors.white70),
                                 decoration: InputDecoration(
                                     hintText: "Full Name",
@@ -65,6 +83,8 @@ class _SigninState extends State<Signin> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                             child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: nic,
                                 style: TextStyle(color: Colors.white70),
                                 decoration: InputDecoration(
                                     hintText: "NIC",
@@ -78,12 +98,14 @@ class _SigninState extends State<Signin> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                             child: TextField(
+                              keyboardType: TextInputType.phone,
+                                controller: phone,
                                 style: TextStyle(color: Colors.white70),
                                 decoration: InputDecoration(
-                                    hintText: "Blood Group",
-                                    hintStyle: TextStyle(color: Colors.white54),
                                     prefixIconColor: Colors.white,
-                                    prefixIcon: Icon(Icons.bloodtype),
+                                    hintText: "Phone",
+                                    hintStyle: TextStyle(color: Colors.white54),
+                                    prefixIcon: Icon(Icons.phone_android),
                                     border: UnderlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.purple)))),
@@ -92,6 +114,7 @@ class _SigninState extends State<Signin> {
                             padding: EdgeInsets.only(top: 20),
                             child: ElevatedButton(
                               onPressed: () {
+                                saveDate();
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
@@ -126,7 +149,8 @@ class _SigninState extends State<Signin> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.orange,
+                                  //primary: Colors.orange,
+                                  backgroundColor: Colors.orange,
                                   padding: EdgeInsets.all(5),
                                   minimumSize: Size(370, 50)),
                             ),

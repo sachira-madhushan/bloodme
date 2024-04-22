@@ -82,6 +82,9 @@ class _SigninState2 extends State<Signin2> {
     'O+',
     'O-',
   ];
+  
+  String? selectedHospital="Hospital";
+  List<String> hospitals=['Hospital','Medirigiriya','Polonnaruwa','Higurakgoda'];
 
   bool _visibility = false;
 
@@ -135,6 +138,7 @@ class _SigninState2 extends State<Signin2> {
     prefs.setString("password", password.value.text.toString());
     prefs.setString("blood", selectedBlood!);
     prefs.setString("distric",selectedValue!);
+    prefs.setString("hospital",selectedHospital!);
   }
 
   Future<String> signUp()async{
@@ -146,6 +150,7 @@ class _SigninState2 extends State<Signin2> {
             'Phone':prefs.getString("phone")!,
             'District':prefs.getString("distric")!,
             'BloodGroup': prefs.getString("blood")!,
+            'Hospital': prefs.getString("hospital")!,
             'Password': prefs.getString("password")!,};
     var body = json.encode(req);
     var response = await http.post(url, body: body);
@@ -190,7 +195,7 @@ class _SigninState2 extends State<Signin2> {
                           topLeft: Radius.circular(50),
                           topRight: Radius.circular(50))),
                   //padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  height: 450,
+                  height: 500,
 
                   child: Column(
                     children: [
@@ -239,6 +244,26 @@ class _SigninState2 extends State<Signin2> {
                         });
                       },
                       items: bloodGroups.map((option) {
+                        return DropdownMenuItem(
+                            value: option,
+                            child: Text(
+                              option,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ));
+                      }).toList(),
+                    ),
+                    DropdownButton(
+                      dropdownColor: Color.fromRGBO(26, 34, 48, 1),
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      value: selectedHospital,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedHospital = value;
+                        });
+                      },
+                      items: hospitals.map((option) {
                         return DropdownMenuItem(
                             value: option,
                             child: Text(

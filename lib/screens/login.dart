@@ -81,8 +81,7 @@ class _LoginState extends State<Login> {
         //is user logged in?
         prefs.setBool("LoggedIn", true);
         prefs.setString("UserPhone",prefs.getString("phone")!);
-
-
+        print(prefs.getString("UserPhone"));
         awesomeDialog= "success";
       }else if(resultDecode['result'].toString()=="nouser"){
        awesomeDialog= "nouser";

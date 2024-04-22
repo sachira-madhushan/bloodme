@@ -53,15 +53,30 @@ class _HomeState extends State<Home> {
   final List<String> postImages = ["", ""];
 
   final Future<SharedPreferences> data=SharedPreferences.getInstance();
+
+  bool userLoggedIn=false;
+  Future<void> loggedInOrNot()async{
+    final prefs=await data;
+    setState(() {
+      userLoggedIn= prefs.getBool("LoggedIn")!;
+      if(userLoggedIn){
+        loadData();
+      }
+    });
+    
+  }
+
   Future<String> loadData()async{
     String? awesomeDialog="";
     final prefs=await data;
+
+
     var url=Uri.parse("http://192.168.56.1:8080/bloodme/getuser.php");
 
 
         String phoneNumber=prefs.getString("UserPhone")!;
     var req = {
-            'Phone':prefs.getString("UserPhone")!};
+            'Phone':phoneNumber!};
 
     var body = json.encode(req);
     var response = await http.post(url, body: body);
@@ -123,7 +138,12 @@ class _HomeState extends State<Home> {
       SystemUiMode.manual,
       overlays: [],
     );
-    loadData();
+    
+      loggedInOrNot();
+      
+    
+    
+    
     getYoutubeVideos();
     super.initState();
   }
@@ -209,26 +229,22 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: Icon(
-      //     Icons.bloodtype,
-      //     color: Colors.white,
-      //   ),
-      //   title: Text(
-      //     "Blood Me",
-      //     style: TextStyle(color: Colors.white),
-      //   ),
+      appBar: AppBar(toolbarHeight:40,
+        title: Text(
+          "BloodMe.lk",
+          style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold),
+        ),
 
-      //   // leading: Icon(
-      //   //   Icons.bloodtype,
-      //   //   color: Colors.white,
-      //   // ),
-      //   backgroundColor: Colors.red,
-      // ),
+        // leading: Icon(
+        //   Icons.bloodtype,
+        //   color: Colors.white,
+        // ),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      ),
       body: Container(
         height: 1000,
         decoration: BoxDecoration(
-          color: Color.fromRGBO(1, 9, 25, 1)!,
+           color: Color.fromRGBO(255, 255, 255, 1)!,
         ),
         child: Column(
           children: [
@@ -239,39 +255,35 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  color: Color.fromRGBO(26, 34, 48, 1),
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  boxShadow:[BoxShadow(color: Colors.black38,offset:Offset.zero,spreadRadius:1,blurRadius:3)],
                 ),
 
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 40.0,
+                    Stack(
+                      children: [
+                        Positioned(child:CircleAvatar(
+                      radius: 30.0,
                       backgroundImage: NetworkImage(
                           'https://cdn-icons-png.flaticon.com/256/3135/3135768.png'), // Replace with your image asset
+                    ),),Positioned(child:Icon(Icons.verified,color: verifiedOrNot? Colors.green:Colors.red,),bottom: 0,right: 0,)
+                      ],
                     ),
                     SizedBox(width: 16.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 8.0),
-                
                         Text(
-                          verification,
+                          "Hi "+name,
                           style: TextStyle(
-                            color:verifiedOrNot? Colors.green:Colors.red,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        Text(
-                          name,
-                          style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8.0),
+                        SizedBox(height: 2.0),
                         Text(
                           'Blood Group : '+bloodGroup,
                           style: TextStyle(
@@ -313,18 +325,18 @@ class _HomeState extends State<Home> {
                               decoration: BoxDecoration(
                                 
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.redAccent,width:5),
+                                border: Border.all(color: Colors.grey,width:2),
                                 color: Colors.white,
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(YoutubeThumbnail(youtubeId:video.split("=")[1]).hd()),
                                 ),
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //       color: Colors.black45,
-                                //       offset: Offset(0, 0),
-                                //       blurRadius: 5)
-                                // ],
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(0, 0),
+                                      blurRadius: 1,spreadRadius:1)
+                                ],
                               ),
                             ),
                           ),
@@ -354,6 +366,9 @@ class _HomeState extends State<Home> {
               width:350,
               height:240,
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(color:Colors.black26,offset:Offset.zero,spreadRadius:1,blurRadius:2),
+                ],
                 borderRadius:BorderRadius.circular(20),
                 gradient: LinearGradient(
                   begin:Alignment.topCenter,
@@ -368,17 +383,17 @@ class _HomeState extends State<Home> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical:5),
-                    child: Align(alignment:Alignment.centerLeft,child: Text("Search a Donner",style: TextStyle(color: Colors.white,fontSize:25),)),
+                    child: Align(alignment:Alignment.centerLeft,child: Text("Search a Donner",style: TextStyle(color: Colors.white,fontSize:20),)),
                   ),
                   Padding(
                         padding: EdgeInsets.fromLTRB(20,0,20,0),
                         child: Column(children: [
                           SizedBox(
-                            width:300,
+                            width: 300,
                             child: DropdownButton(
-                              icon:Icon(Icons.arrow_drop_down_outlined,color: Colors.white),
+                              icon:Icon(Icons.arrow_drop_down_outlined,color: Colors.transparent),
                               elevation: 5,
-                                                     
+                                                 
                                                   dropdownColor: Color.fromRGBO(26, 34, 48, 1),
                                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                                   value: selectedValue,
@@ -393,6 +408,7 @@ class _HomeState extends State<Home> {
                               child: Text(
                                 option,
                                 style: TextStyle(
+                                  fontSize:15,
                                   color: Colors.white,
                                 ),
                               ));
@@ -402,7 +418,7 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       width:300,
                       child: DropdownButton(
-                        icon:Icon(Icons.arrow_drop_down_outlined,color: Colors.white),
+                        icon:Icon(Icons.arrow_drop_down_outlined,color: Colors.transparent),
                               elevation: 5,
                         
                         dropdownColor: Color.fromRGBO(26, 34, 48, 1),
@@ -419,6 +435,7 @@ class _HomeState extends State<Home> {
                               child: Text(
                                 option,
                                 style: TextStyle(
+                                  fontSize:15,
                                   color: Colors.white,
                                 ),
                               ));
@@ -428,7 +445,7 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       width:300,
                       child: DropdownButton(
-                        icon:Icon(Icons.arrow_drop_down_outlined,color: Colors.white),
+                        icon:Icon(Icons.arrow_drop_down_outlined,color:Colors.transparent),
                         dropdownColor: Color.fromRGBO(26, 34, 48, 1),
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         value: selectedBlood,
@@ -441,8 +458,10 @@ class _HomeState extends State<Home> {
                           return DropdownMenuItem(
                               value: option,
                               child: Text(
+                                
                                 option,
                                 style: TextStyle(
+                                  fontSize:15,
                                   color: Colors.white,
                                 ),
                               ));
@@ -451,7 +470,9 @@ class _HomeState extends State<Home> {
                     ),
                         Padding(
               padding: const EdgeInsets.all(0.0),
-              child: Container(alignment:Alignment.centerLeft ,child: OutlinedButton(onPressed: (){}, child:Text("Find",style:TextStyle(color: Colors.white),),style: ButtonStyle(backgroundColor:MaterialStatePropertyAll(Colors.red)),)),
+              child: Container(alignment:Alignment.centerLeft ,child: OutlinedButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Donate()));
+              }, child:Text("Find",style:TextStyle(color: Colors.white,fontSize:15)),style: ButtonStyle(backgroundColor:MaterialStatePropertyAll(Colors.red),),)),
             ),
                         ]),
             )],              
@@ -482,8 +503,8 @@ class _HomeState extends State<Home> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical:5),
                         child: ListTile(
-                          title:Text(posts[index],style: TextStyle(color: Colors.white,fontSize:12),),
-                          subtitle: Text("There are four type of blood"),
+                          title:Text(posts[index],style: TextStyle(color: Colors.black,fontSize:12),),
+                          subtitle: Text("There are four type of blood",style: TextStyle(color: Colors.black26),),
                           leading:Image.network("https://www.1mg.com/articles/wp-content/uploads/2016/11/rsz_shutterstock_478340209.jpg"),
                         ),
                       ),
@@ -494,7 +515,7 @@ class _HomeState extends State<Home> {
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Container(alignment:Alignment.centerLeft ,child: OutlinedButton(onPressed: (){}, child:Text("Read More"),)),
+              child: Container(alignment:Alignment.centerLeft ,child: OutlinedButton(onPressed: (){}, child:Text("Read More",style: TextStyle(color: Colors.white),),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue[900])),)),
             ),
           ],
         ),

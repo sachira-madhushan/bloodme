@@ -1,8 +1,12 @@
+import "dart:convert";
+import "package:http/http.dart" as http;
 import "package:bloodme/screens/login.dart";
 import "package:bloodme/screens/notifications.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:bloodme/screens/donate.dart";
 import "package:bloodme/screens/home.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -12,152 +16,157 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  Future<SharedPreferences> data=SharedPreferences.getInstance();
+
+  bool userLoggedIn=false;
+  Future<void> loggedInOrNot()async{
+    final prefs=await data;
+    setState(() {
+      userLoggedIn= prefs.getBool("LoggedIn")!;
+      if(userLoggedIn){
+      getDoner();
+    }else{
+      name="";
+     phone="";
+   district="";
+   blood="";
+   hospital="";
+   nic="";
+    }
+    });
+    
+  }
+  Future<void> logOut()async{
+    final prefs=await data;
+    setState(() {
+      prefs.setBool("LoggedIn",false);
+      loggedInOrNot();
+    });
+  }
+  String name="";
+  String phone="";
+  String district="";
+  String blood="";
+  String hospital="";
+  String nic="";
+
+  @override
+  void initState() {
+    loggedInOrNot();
+    
+    
+  }
+  
+
+  Future<void> getDoner()async{
+    final prefs=await data;
+    var url=Uri.parse("http://192.168.56.1:8080/bloodme/userProfile.php");
+    var req = {
+            'Phone':prefs.getString("UserPhone")};
+
+    var body = json.encode(req);
+    var response = await http.post(url, body: body);
+    var resultDecode=json.decode(response.body);
+
+    print(response.body);
+    if(response.statusCode==200){
+      setState(() {
+        //List<dynamic> resultArray=resultDecode;
+
+        for (var element in resultDecode) {
+          name=element['FullName'].toString();
+          blood=element['BloodGroup'].toString();
+          district=element['District'].toString();
+          hospital=element['Hospital'].toString();
+          phone=element['Phone'].toString();
+          nic=element['NIC'].toString();
+        }
+      });
+    }
+  }
   int selectedIndex = 2;
+  bool statusUpdate=true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(1, 9, 25, 1)!,
+      appBar: AppBar(toolbarHeight:40,
+       
+        title: Text(
+          "BloodMe.lk",
+          style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold),
+        ),),
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1)!,
       body: Stack(
         children: [
-          Positioned(
-              top: 90,
-              left: 160,
-              child: Column(
-                children: [Image.asset("assets/images/Logo.png")],
-              )),
-          Positioned(
-              top: 180,
-              left: 22,
-              child: Text(
-                "Your support means the world to us",
-                style: TextStyle(color: Colors.white70, fontSize: 18),
-              )),
-          Positioned(
-            top: 220,
-            left: 125,
-            child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.handshake_outlined),
-                label: Text("Donate Us")),
-          ),
+          
           Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: CircleAvatar(
-                            radius: 40.0,
-                            backgroundImage: NetworkImage(
-                                'https://cdn-icons-png.flaticon.com/256/3135/3135768.png'), // Replace with your image asset
+            alignment: Alignment.center,
+            child: Card(
+              child: Container(
+                margin: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: CircleAvatar(
+                              radius: 40.0,
+                              backgroundImage: NetworkImage(
+                                  'https://cdn-icons-png.flaticon.com/256/3135/3135768.png'), // Replace with your image asset
+                            ),
                           ),
                         ),
-                      ),
-                      //doner name
-                      Text(
-                        "Hello John !",
-                        style: TextStyle(color: Colors.orange, fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Login()));
-                      },
-                      child: Card(
-                        color: Colors.red[100],
-                        child: ListTile(
-                          title: Text(
-                            "Edit Profile",
-                            style: TextStyle(color: Colors.red, fontSize: 25),
-                          ),
-                          trailing: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 164, 164),
-                              ),
-                              child: Icon(
-                                Icons.arrow_forward_outlined,
-                                color: Color.fromARGB(255, 255, 17, 0),
-                              )),
-                          leading: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 164, 164),
-                                  borderRadius: BorderRadius.circular(80)),
-                              child: Icon(
-                                Icons.edit_outlined,
-                                color: Color.fromARGB(255, 255, 17, 0),
-                              )),
+                        //doner name
+                        Text(
+                          "Hello "+name+"!",
+                          style: TextStyle(color: Colors.orange, fontSize: 20),
                         ),
-                      ),
+                        Align(alignment: Alignment.topRight,child: IconButton(onPressed: (){}, icon: Icon(Icons.notifications_active,color: Colors.red,)))
+                      ],
+
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Notifications()));
-                      },
-                      child: Card(
-                        color: const Color.fromARGB(255, 239, 205, 255),
-                        child: ListTile(
-                          title: Text(
-                            "Notifications",
-                            style: TextStyle(
-                                color: const Color.fromARGB(255, 184, 54, 244),
-                                fontSize: 25),
-                          ),
-                          trailing: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 225, 164, 255),
-                              ),
-                              child: Icon(
-                                Icons.arrow_forward_outlined,
-                                color: Color.fromARGB(255, 132, 0, 255),
-                              )),
-                          leading: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 222, 164, 255),
-                                  borderRadius: BorderRadius.circular(80)),
-                              child: Icon(
-                                Icons.notifications_none_outlined,
-                                color: Color.fromARGB(255, 140, 0, 255),
-                              )),
-                        ),
-                      ),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                ],
-              ),
-              width: double.infinity,
-              height: 300,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
+                    
+                    Card(child: Container(width:300,height:400,child: Column(
+                      children: [
+                        Card(child: ListTile(title:Text("Status :"+ (statusUpdate?"Online":"Offline")),trailing: Switch(
+  activeColor: Color.fromARGB(255, 255, 255, 255),
+  activeTrackColor: Color.fromARGB(255, 0, 255, 30),
+  inactiveThumbColor: Colors.blueGrey.shade600,
+  inactiveTrackColor: Colors.grey.shade400,
+  splashRadius: 50.0,
+  value: statusUpdate,
+  onChanged: (value) => setState(() => statusUpdate = value),
+),)),
+Card(child: ListTile(title:Text("Full Name :"+name),)),
+Card(child: ListTile(title:Text("Phone :"+phone),)),
+Card(child: ListTile(title:Text("NIC :"+nic),)),
+Card(child: ListTile(title:Text("District :"+district),)),
+Card(child: ListTile(title:Text("Hospital :"+hospital),)),
+                      ],
+                    ),)),
+                    userLoggedIn?buttonGroup():SizedBox(width:300,child: FilledButton(style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue)),onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+                    }, child: Text("Login")))
+                  ],
                 ),
-                color: Color.fromRGBO(26, 34, 48, 1),
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+              
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50),
+                    bottomLeft: Radius.circular(50),
+                  ),
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                ),
               ),
             ),
           ),
@@ -206,5 +215,17 @@ class _ProfileState extends State<Profile> {
             builder: (context) => (Profile()),
           ));
     }
+  }
+
+  Widget buttonGroup(){
+    return Column(
+      children: [
+        //SizedBox(width:300,child: FilledButton(style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue)),onPressed: (){}, child: Text("Edit Profile"))),
+                    SizedBox( width: 300,child: FilledButton(onPressed: (){
+
+                      logOut();
+                    }, child: Text("Logout"))),
+      ],
+    );
   }
 }

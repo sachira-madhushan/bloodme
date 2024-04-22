@@ -1,4 +1,8 @@
+import "dart:convert";
+import 'package:http/http.dart' as http;
 import "package:flutter/material.dart";
+import "package:shared_preferences/shared_preferences.dart";
+import "package:url_launcher/url_launcher.dart";
 
 class DonerProfile extends StatefulWidget {
   const DonerProfile({super.key});
@@ -11,6 +15,56 @@ class _DonerProfileState extends State<DonerProfile> {
   
   
   
+  final Future<SharedPreferences> data=SharedPreferences.getInstance();
+  
+  String name="";
+  String phone="";
+  String district="";
+  String blood="";
+  String hospital="";
+
+
+
+  Future<void> getDoner()async{
+    final prefs=await data;
+    var url=Uri.parse("http://192.168.56.1:8080/bloodme/getUserByID.php");
+    var req = {
+            'ID':prefs.getString("selectedDonerID")};
+
+    var body = json.encode(req);
+    var response = await http.post(url, body: body);
+    var resultDecode=json.decode(response.body);
+
+    print(response.body);
+    if(response.statusCode==200){
+      setState(() {
+        //List<dynamic> resultArray=resultDecode;
+
+        for (var element in resultDecode) {
+          name=element['FullName'].toString();
+          blood=element['BloodGroup'].toString();
+          district=element['District'].toString();
+          hospital=element['Hospital'].toString();
+          phone=element['Phone'].toString();
+        }
+      });
+    }
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+
+  @override
+  void initState() {
+    getDoner();
+    super.initState();
+  }
   
   //meke calls
   @override
@@ -56,7 +110,7 @@ class _DonerProfileState extends State<DonerProfile> {
                 Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    "Sachira Madhushan",
+                    name,
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
@@ -91,7 +145,7 @@ class _DonerProfileState extends State<DonerProfile> {
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
-                          "Sachira Madhushan",
+                          name,
                           style: TextStyle(color: Colors.white70),
                         ),
                       ],
@@ -121,7 +175,7 @@ class _DonerProfileState extends State<DonerProfile> {
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
-                          "O+",
+                          blood,
                           style: TextStyle(color: Colors.white70),
                         ),
                       ],
@@ -155,11 +209,11 @@ class _DonerProfileState extends State<DonerProfile> {
                           color: Colors.orange,
                         ),
                         Text(
-                          "City",
+                          "District",
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
-                          "Medirigiriya",
+                          district,
                           style: TextStyle(color: Colors.white70),
                         ),
                       ],
@@ -181,15 +235,15 @@ class _DonerProfileState extends State<DonerProfile> {
                     child: Column(
                       children: [
                         Icon(
-                          Icons.phone_android_outlined,
+                          Icons.medical_information,
                           color: Colors.green,
                         ),
                         Text(
-                          "Contact",
+                          "Hospital",
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
-                          "+94 783398454",
+                          hospital,
                           style: TextStyle(color: Colors.white70),
                         ),
                       ],
@@ -207,7 +261,7 @@ class _DonerProfileState extends State<DonerProfile> {
             padding: const EdgeInsets.all(15.0),
             child: ElevatedButton(
               onPressed: () {
-                
+                _makePhoneCall(phone);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

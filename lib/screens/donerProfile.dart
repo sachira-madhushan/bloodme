@@ -41,11 +41,11 @@ class _DonerProfileState extends State<DonerProfile> {
         //List<dynamic> resultArray=resultDecode;
 
         for (var element in resultDecode) {
-          name=element['FullName'].toString();
-          blood=element['BloodGroup'].toString();
-          district=element['District'].toString();
-          hospital=element['Hospital'].toString();
-          phone=element['Phone'].toString();
+          name=element['u_name'].toString();
+          blood=element['u_blood_group'].toString();
+          district=element['u_town'].toString();
+          hospital=element['u_hospital'].toString();
+          phone=element['u_telephone'].toString();
         }
       });
     }

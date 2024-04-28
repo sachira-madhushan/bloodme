@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:bloodme/screens/posts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,6 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:youtube/youtube.dart';
 import 'package:youtube/youtube_thumbnail.dart';
 import 'dart:async';
+import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -66,6 +68,13 @@ class _HomeState extends State<Home> {
     
   }
 
+  Future<void> sendDataToDonetePage()async{
+    final prefs=await data;
+    prefs.setString("selectedDistrict", selectedValue!);
+    prefs.setString("selectedHospital", selectedHospital!);
+    prefs.setString("selectedBlood", selectedBlood!);
+  }
+
   Future<String> loadData()async{
     String? awesomeDialog="";
     final prefs=await data;
@@ -89,7 +98,7 @@ class _HomeState extends State<Home> {
           bloodGroup=resultDecode['blood'];
           var ver=resultDecode['verified'];
 
-          if(ver=="T"){
+          if(ver=="1"){
             verification="Verified";
             verifiedOrNot=true;
           }else{
@@ -160,7 +169,323 @@ class _HomeState extends State<Home> {
   }
   String? selectedValue = "District";
   String? selectedHospital = "Hospital";
-  List<String> hospitals=['Hospital','Medirigiriya','Polonnaruwa','Higurakgoda'];
+  List<String> hospitals = [
+  'Hospital',
+  'Ampara General Hospital',
+  'Akkaraipattu Base Hospital',
+  'Kalmunai Base Hospital',
+  'Sammanthurai Base Hospital',
+  'Pottuvil Base Hospital',
+  'Lahugala Base Hospital',
+  'Damana Base Hospital',
+  'Teaching Hospital, Anuradhapura',
+  'District General Hospital, Anuradhapura',
+  'Medawachchiya Base Hospital',
+  'Padaviya Base Hospital',
+  'Horowpathana Base Hospital',
+  'Mihintale Base Hospital',
+  'Thambuttegama Base Hospital',
+  'Badulla General Hospital',
+  'Diyatalawa Base Hospital',
+  'Mahiyanganaya Base Hospital',
+  'Haliela Base Hospital',
+  'Haputale Base Hospital',
+  'Lunugala Base Hospital',
+  'Welimada Base Hospital',
+  'Batticaloa Teaching Hospital',
+  'Batticaloa District General Hospital',
+  'Batticaloa Base Hospital',
+  'Chenkalady Base Hospital',
+  'Eravur Base Hospital',
+  'Kaluwanchikudy Base Hospital',
+  'Kattankudy Base Hospital',
+  'Kattankudy East Base Hospital',
+  'Manmunai North Base Hospital',
+  'Navaladi Base Hospital',
+  'Oddamavadi Base Hospital',
+  'Vakarai Base Hospital',
+  'National Hospital',
+  'Colombo South Teaching Hospital',
+  'Colombo North Teaching Hospital',
+  'Sri Jayewardenepura General Hospital',
+  'Lady Ridgeway Hospital for Children',
+  'Castle Street Hospital for Women',
+  'Colombo General Hospital',
+  'De Soysa Maternity Hospital',
+  'Kalubowila Teaching Hospital',
+  'Army Hospital, Colombo',
+  'Sri Lanka Navy Hospital, Welisara',
+  'Police Hospital, Narahenpita',
+  'Karapitiya Teaching Hospital',
+  'Galle General Hospital',
+  'Balapitiya Base Hospital',
+  'Elpitiya Base Hospital',
+  'Ambalangoda Base Hospital',
+  'Hikkaduwa Base Hospital',
+  'Matara District General Hospital',
+  'Tangalle Base Hospital',
+  'Hambantota General Hospital',
+  'Tissamaharama Base Hospital',
+  'Kamburupitiya Base Hospital',
+  'Kotapola Base Hospital',
+  'Dikwella Base Hospital',
+  'Walasmulla Base Hospital',
+  'District General Hospital, Gampaha',
+  'Ragama Teaching Hospital',
+  'Negombo General Hospital',
+  'Minuwangoda Base Hospital',
+  'Wathupitiwala Base Hospital',
+  'Divulapitiya Base Hospital',
+  'Mirigama Base Hospital',
+  'Ja-Ela Base Hospital',
+  'Seeduwa Base Hospital',
+  'Homagama Base Hospital',
+  'Kadawatha Base Hospital',
+  'Kaduwela Base Hospital',
+  'Horana Base Hospital',
+  'Bandaragama Base Hospital',
+  'Biyagama Base Hospital',
+  'Hambantota General Hospital',
+  'Tissamaharama Base Hospital',
+  'Ambalantota Base Hospital',
+  'Angunakolapelessa Base Hospital',
+  'Walasmulla Base Hospital',
+  'Lunugamvehera Base Hospital',
+  'Kataragama Base Hospital',
+  'Beliatta Base Hospital',
+  'Weerawila Base Hospital',
+  'Jaffna Teaching Hospital',
+  'Jaffna General Hospital',
+  'Manthikai Base Hospital',
+  'Chavakachcheri Base Hospital',
+  'Point Pedro Base Hospital',
+  'Kilinochchi General Hospital',
+  'Poonakary Base Hospital',
+  'Vavuniya General Hospital',
+  'Vavuniya Base Hospital',
+  'Mullaitivu District General Hospital',
+  'Mullaitivu Base Hospital',
+  'Kalutara General Hospital',
+  'Nagoda General Hospital',
+  'Panadura Base Hospital',
+  'Horana Base Hospital',
+  'Agalawatta Base Hospital',
+  'Mathugama Base Hospital',
+  'Beruwala Base Hospital',
+  'Wadduwa Base Hospital',
+  'Bandaragama Base Hospital',
+  'Horawala Base Hospital',
+  'Walallawita Base Hospital',
+  'Madurawela Base Hospital',
+  'Kandy General Hospital',
+  'Peradeniya Teaching Hospital',
+  'Central Province General Hospital, Peradeniya',
+  'Mahiyangana Base Hospital',
+  'Nawalapitiya Base Hospital',
+  'Gampola Base Hospital',
+  'Hatton Base Hospital',
+  'Digana Base Hospital',
+  'Teldeniya Base Hospital',
+  'Theldeniya Base Hospital',
+  'Panvila Base Hospital',
+  'Udispattuwa Base Hospital',
+  'District General Hospital, Kegalle',
+  'Warakapola Base Hospital',
+  'Mawanella Base Hospital',
+  'Dehiowita Base Hospital',
+  'Yatiyantota Base Hospital',
+  'Rambukkana Base Hospital',
+  'Deraniyagala Base Hospital',
+  'Galigamuwa Base Hospital',
+  'Bulathkohupitiya Base Hospital',
+  'Hemmathagama Base Hospital',
+  'Ruwanwella Base Hospital',
+  'Kegalle Base Hospital',
+  'Kilinochchi General Hospital',
+  'Poonakary Base Hospital',
+  'Mullaitivu District General Hospital',
+  'Mullaitivu Base Hospital',
+  'Mankulam Base Hospital',
+  'Karachchi Base Hospital',
+  'Vishvamadu Base Hospital',
+  'Pachchilaippalli Base Hospital',
+  'Kandawalai Base Hospital',
+  'Murikandy Base Hospital',
+  'Oddusuddan Base Hospital',
+  'Thunukkai Base Hospital',
+  'Iranamadu Base Hospital',
+  'Kanagarayankulam Base Hospital',
+  'Teaching Hospital, Kurunegala',
+  'District General Hospital, Kurunegala',
+  'Wariyapola Base Hospital',
+  'Kuliyapitiya Base Hospital',
+  'Nikaweratiya Base Hospital',
+  'Galgamuwa Base Hospital',
+  'Padeniya Base Hospital',
+  'Polgahawela Base Hospital',
+  'Giribawa Base Hospital',
+  'Mahawa Base Hospital',
+  'Ridigama Base Hospital',
+  'Panduwasnuwara Base Hospital',
+  'Gokarella Base Hospital',
+  'Polpithigama Base Hospital',
+  'Rasnayakapura Base Hospital',
+  'Galagedara Base Hospital',
+  'Yapahuwa Base Hospital',
+  'Kobeigane Base Hospital',
+  'Hettipola Base Hospital',
+  'Alawwa Base Hospital',
+  'Bingiriya Base Hospital',
+  'Pannala Base Hospital',
+  'Mannar District General Hospital',
+  'Pooneryn Base Hospital',
+  'Vidattaltivu Base Hospital',
+  'Nanattan Base Hospital',
+  'Vankalai Base Hospital',
+  'Madhu Base Hospital',
+  'Adampan Base Hospital',
+  'Murunkan Base Hospital',
+  'Thiruketheeswaram Base Hospital',
+  'Alampil Base Hospital',
+  'Mullikulam Base Hospital',
+  'Matale General Hospital',
+  'Dambulla Base Hospital',
+  'Galewela Base Hospital',
+  'Ukuwela Base Hospital',
+  'Rattota Base Hospital',
+  'Naula Base Hospital',
+  'Wilgamuwa Base Hospital',
+  'Laggala Pallegama Base Hospital',
+  'Uthuwankanda Base Hospital',
+  'Yatawatta Base Hospital',
+  'Pallepola Base Hospital',
+  'Matale Hospital',
+  'Matara General Hospital',
+  'Tangalle Base Hospital',
+  'Hambantota General Hospital',
+  'Kamburupitiya Base Hospital',
+  'Kotapola Base Hospital',
+  'Dikwella Base Hospital',
+  'Walasmulla Base Hospital',
+  'Deniyaya Base Hospital',
+  'Akuressa Base Hospital',
+  'Thihagoda Base Hospital',
+  'Morawaka Base Hospital',
+  'Dickwella District Hospital',
+  'Monaragala General Hospital',
+  'Bibile Base Hospital',
+  'Wellawaya Base Hospital',
+  'Badalkumbura Base Hospital',
+  'Buttala Base Hospital',
+  'Siyambalanduwa Base Hospital',
+  'Madulla Base Hospital',
+  'Kataragama Base Hospital',
+  'Thanamalwila Base Hospital',
+  'Suriyawewa Base Hospital',
+  'Medagama Base Hospital',
+  'Madulla North Base Hospital',
+  'Monaragala Base Hospital',
+  'Mullaitivu District General Hospital',
+  'Mullaitivu Base Hospital',
+  'Puthukudiyiruppu Base Hospital',
+  'Maritimepattu Base Hospital',
+  'Oddusuddan Base Hospital',
+  'Mulliyawalai Base Hospital',
+  'Thunukkai Base Hospital',
+  'Mankulam Base Hospital',
+  'Puthumattalan Base Hospital',
+  'Vellamullivaikkal Base Hospital',
+  'Puthukkudiyiruppu Base Hospital',
+  'Vishwamadu Base Hospital',
+  'Nuwara Eliya General Hospital',
+  'Badulla General Hospital',
+  'Diyathalawa Base Hospital',
+  'Welimada Base Hospital',
+  'Talawakelle Base Hospital',
+  'Maskeliya Base Hospital',
+  'Ragala Base Hospital',
+  'Ginigathhena Base Hospital',
+  'Kotagala Base Hospital',
+  'Hatton Base Hospital',
+  'Hatton Base Hospital',
+  'Kotmale Base Hospital',
+  'Agarapatana Base Hospital',
+  'Kotmale Base Hospital',
+  'Polonnaruwa General Hospital',
+  'Hingurakgoda Base Hospital',
+  'Medirigiriya Base Hospital',
+  'Minneriya Base Hospital',
+  'Manampitiya Base Hospital',
+  'Lankapura Base Hospital',
+  'Elahera Base Hospital',
+  'Welikanda Base Hospital',
+  'Dimbulagala Base Hospital',
+  'Dehiattakandiya Base Hospital',
+  'Kaduruwela Base Hospital',
+  'Jayanthipura Base Hospital',
+  'District General Hospital, Puttalam',
+  'Chilaw General Hospital',
+  'Puttalam Base Hospital',
+  'Wennappuwa Base Hospital',
+  'Nawagattegama Base Hospital',
+  'Madampe Base Hospital',
+  'Mundalama Base Hospital',
+  'Naththandiya Base Hospital',
+  'Anamaduwa Base Hospital',
+  'Karuwalagaswewa Base Hospital',
+  'Eluwankulama Base Hospital',
+  'Maho Base Hospital',
+  'Norochcholai Base Hospital',
+  'Kalpitiya Base Hospital',
+  'Wennappuwa Base Hospital',
+  'Teaching Hospital, Ratnapura',
+  'District General Hospital, Ratnapura',
+  'Embilipitiya Base Hospital',
+  'Kahawatta Base Hospital',
+  'Balangoda Base Hospital',
+  'Kuruwita Base Hospital',
+  'Eheliyagoda Base Hospital',
+  'Rakwana Base Hospital',
+  'Elapatha Base Hospital',
+  'Nivithigala Base Hospital',
+  'Ayagama Base Hospital',
+  'Kolonne Base Hospital',
+  'Lunugala Base Hospital',
+  'Godakawela Base Hospital',
+  'Imbulpe Base Hospital',
+  'Embilipitiya District General Hospital',
+  'Rakwana District General Hospital',
+  'Panadura General Hospital',
+  'Trincomalee General Hospital',
+  'Muttur Base Hospital',
+  'Verugal Base Hospital',
+  'Serunuwara Base Hospital',
+  'Kinniya Base Hospital',
+  'Kantale Base Hospital',
+  'Morawewa Base Hospital',
+  'Gomarankadawala Base Hospital',
+  'Kuchchaveli Base Hospital',
+  'Padaviya Base Hospital',
+  'Thambalagamuwa Base Hospital',
+  'Thiriyayi Base Hospital',
+  'Kantalai Base Hospital',
+  'Pulmoddai Base Hospital',
+  'Kuchchaweli Base Hospital',
+  'Nilaveli Base Hospital',
+  'Sambalthivu Base Hospital',
+  'Kuchchimunai Base Hospital',
+  'Vavuniya General Hospital',
+  'Vavuniya Base Hospital',
+  'Nedunkeni Base Hospital',
+  'Omanthai Base Hospital',
+  'Pompemadu Base Hospital',
+  'Puthukkudiyiruppu Base Hospital',
+  'Puliyankulam Base Hospital',
+  'Thandikulam Base Hospital',
+  'Velikandalkadu Base Hospital',
+  'Vavuniya South Base Hospital',
+  'Vavuniya North Base Hospital'
+];
   List<String> citys = [
     'District',
     'Akkaraipattu',
@@ -230,6 +555,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(toolbarHeight:40,
+        automaticallyImplyLeading: false,
         title: Text(
           "BloodMe.lk",
           style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold),
@@ -408,7 +734,7 @@ class _HomeState extends State<Home> {
                               child: Text(
                                 option,
                                 style: TextStyle(
-                                  fontSize:15,
+                                  fontSize:12,
                                   color: Colors.white,
                                 ),
                               ));
@@ -435,7 +761,7 @@ class _HomeState extends State<Home> {
                               child: Text(
                                 option,
                                 style: TextStyle(
-                                  fontSize:15,
+                                  fontSize:12,
                                   color: Colors.white,
                                 ),
                               ));
@@ -461,7 +787,7 @@ class _HomeState extends State<Home> {
                                 
                                 option,
                                 style: TextStyle(
-                                  fontSize:15,
+                                  fontSize:12,
                                   color: Colors.white,
                                 ),
                               ));
@@ -471,62 +797,76 @@ class _HomeState extends State<Home> {
                         Padding(
               padding: const EdgeInsets.all(0.0),
               child: Container(alignment:Alignment.centerLeft ,child: OutlinedButton(onPressed: (){
+                sendDataToDonetePage();
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Donate()));
               }, child:Text("Find",style:TextStyle(color: Colors.white,fontSize:15)),style: ButtonStyle(backgroundColor:MaterialStatePropertyAll(Colors.red),),)),
+            ),]),
             ),
-                        ]),
-            )],              
+            
+            ],              
             ),
             ),
-            Text(
-              'Health',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 16.0,
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: posts.length,
-                itemBuilder: (context, index) {
-                  return Expanded(
-                    child: GestureDetector(
-                      //post tap handle here
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BlogPost()));
-                        print('Tapped on item ${index + 1}');
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical:5),
-                        child: ListTile(
-                          title:Text(posts[index],style: TextStyle(color: Colors.black,fontSize:12),),
-                          subtitle: Text("There are four type of blood",style: TextStyle(color: Colors.black26),),
-                          leading:Image.network("https://www.1mg.com/articles/wp-content/uploads/2016/11/rsz_shutterstock_478340209.jpg"),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            SizedBox(
+              height:50,
             ),
             Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(alignment:Alignment.centerLeft ,child: OutlinedButton(onPressed: (){}, child:Text("Read More",style: TextStyle(color: Colors.white),),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue[900])),)),
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                width:350,
+                child: PrettySlideUpButton(
+                    bgColor: Color.fromARGB(255, 255, 175, 175),
+                    onPressed:(){},
+                    firstChild: const Text(
+                      'BloodMe.lk',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    secondChild: const Text(
+                      'BloodMe.lk',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ),
             ),
+            
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                width:350,
+                child: PrettySlideUpButton(
+                    bgColor: Color.fromARGB(255, 145, 242, 148),
+                    onPressed:(){},
+                    firstChild: const Text(
+                      'About Developers',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    secondChild: const Text(
+                      'Black Pixel',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ),
+            ),
+            
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         backgroundColor: Color.fromRGBO(26, 34, 48, 1)!,
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.orange,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.bloodtype), label: "Donate"),
+          BottomNavigationBarItem(icon: Icon(Icons.post_add_rounded), label: "Blogs"),
           //BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: "Blog"),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_2_outlined), label: "Profile"),
@@ -557,6 +897,13 @@ class _HomeState extends State<Home> {
           ));
     }
     if (selectedIndex == 2) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => (Posts()),
+          ));
+    }
+    if (selectedIndex == 3) {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

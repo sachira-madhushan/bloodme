@@ -1,18 +1,54 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http ;
 import 'package:bloodme/screens/donate.dart';
 import 'package:bloodme/screens/post.dart';
 import 'package:flutter/material.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({super.key});
-
   @override
   State<Notifications> createState() => _NotificationsState();
 }
 
 class _NotificationsState extends State<Notifications> {
-  final List<String> notification = ["Blood Donation Camp", "New Post Added"];
-  final List<String> time = ["6:15", "15:20"];
-  final List<String> subtitle = ["Polonnaruwa", "Health"];
+  final List<String> title =[];
+  final List<String> subtitle = [];
+  final List<String> notificationIDs=[];
+  final List<String> time = [];
+
+
+  Future<void> getYoutubeVideos()async{
+    String? awesomeDialog="";
+    var url=Uri.parse("http://192.168.56.1:8080/bloodme/notifications.php");
+    var req = {
+            'Notifications':"Notifications"};
+
+    var body = json.encode(req);
+    var response = await http.post(url, body: body);
+    var resultDecode=json.decode(response.body);
+
+    print(response.body);
+    if(response.statusCode==200){
+      setState(() {
+        
+        for (var element in resultDecode) {
+          title.add(element['Title']);
+          subtitle.add(element['Subtitle']);
+          notificationIDs.add(element['n_id']);
+          time.add(element['DateTime']);
+        }
+        
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      getYoutubeVideos();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,12 +59,11 @@ class _NotificationsState extends State<Notifications> {
           style: TextStyle(color: Colors.white),
         ),
         
-        actions: [IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.white,))],
         backgroundColor: Colors.orange,
       ),
       body: ListView.builder(
           shrinkWrap: true,
-          itemCount: notification.length,
+          itemCount: title.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
                 onTap: () {
@@ -42,7 +77,7 @@ class _NotificationsState extends State<Notifications> {
                 ),
                 subtitle: Text(subtitle[index]),
                 title: Text(
-                  notification[index],
+                  title[index],
                   style: TextStyle(color: Colors.white),
                 ));
           }),

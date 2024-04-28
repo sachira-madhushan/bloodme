@@ -1,4 +1,6 @@
 import "dart:convert";
+import "package:bloodme/screens/posts.dart";
+import "package:flutter/widgets.dart";
 import "package:http/http.dart" as http;
 import "package:bloodme/screens/login.dart";
 import "package:bloodme/screens/notifications.dart";
@@ -50,6 +52,7 @@ class _ProfileState extends State<Profile> {
   String blood="";
   String hospital="";
   String nic="";
+  String status="";
 
   @override
   void initState() {
@@ -57,7 +60,7 @@ class _ProfileState extends State<Profile> {
     
     
   }
-  
+  bool statusUpdate=false;
 
   Future<void> getDoner()async{
     final prefs=await data;
@@ -75,23 +78,45 @@ class _ProfileState extends State<Profile> {
         //List<dynamic> resultArray=resultDecode;
 
         for (var element in resultDecode) {
-          name=element['FullName'].toString();
-          blood=element['BloodGroup'].toString();
-          district=element['District'].toString();
-          hospital=element['Hospital'].toString();
-          phone=element['Phone'].toString();
-          nic=element['NIC'].toString();
+          name=element['u_name'].toString();
+          blood=element['u_blood_group'].toString();
+          district=element['u_town'].toString();
+          hospital=element['u_hospital'].toString();
+          phone=element['u_telephone'].toString();
+          nic=element['u_nic'].toString();
+          status=element['u_status'].toString();
+        }
+
+        if(status=="1"){
+          statusUpdate=true;
+        }else{
+          statusUpdate=false;
         }
       });
     }
   }
-  int selectedIndex = 2;
-  bool statusUpdate=true;
+
+  Future<void> updateStatus()async{
+    final prefs=await data;
+    var url=Uri.parse("http://192.168.56.1:8080/bloodme/updateStatus.php");
+    var req = {
+            'Phone':prefs.getString("UserPhone")};
+
+    var body = json.encode(req);
+    var response = await http.post(url, body: body);
+    print(response.body);
+    
+
+  }
+
+
+  int selectedIndex = 3;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(toolbarHeight:40,
-       
+        automaticallyImplyLeading: false,
         title: Text(
           "BloodMe.lk",
           style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold),
@@ -103,52 +128,70 @@ class _ProfileState extends State<Profile> {
           Align(
             alignment: Alignment.center,
             child: Card(
+            
               child: Container(
+              
                 margin: EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: CircleAvatar(
-                              radius: 40.0,
-                              backgroundImage: NetworkImage(
-                                  'https://cdn-icons-png.flaticon.com/256/3135/3135768.png'), // Replace with your image asset
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color:const Color.fromARGB(255, 161, 213, 255),
+                          borderRadius:BorderRadius.only(topLeft:Radius.circular(20),topRight: Radius.circular(20),bottomLeft: Radius.circular(20))
+                          
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: CircleAvatar(
+                                  radius: 40.0,
+                                  backgroundImage: NetworkImage(
+                                      'https://cdn-icons-png.flaticon.com/256/3135/3135768.png'), // Replace with your image asset
+                                ),
+                              ),
                             ),
-                          ),
+                            //doner name
+                            Text(
+                              "Hello "+name+"!",
+                              style: TextStyle(color: Color.fromARGB(255, 99, 99, 99), fontSize: 20),
+                            ),
+                            Align(alignment: Alignment.topRight,child: IconButton(onPressed: (){
+                              Navigator.push(context, MaterialPageRoute(builder:(context)=>Notifications()));
+                            }, icon: Icon(Icons.notifications_active,color: Colors.red,)))
+                          ],
+                        
                         ),
-                        //doner name
-                        Text(
-                          "Hello "+name+"!",
-                          style: TextStyle(color: Colors.orange, fontSize: 20),
-                        ),
-                        Align(alignment: Alignment.topRight,child: IconButton(onPressed: (){}, icon: Icon(Icons.notifications_active,color: Colors.red,)))
-                      ],
-
+                      ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     
-                    Card(child: Container(width:300,height:400,child: Column(
+                    Card(
+                      
+                      child: Container(width:300,height:385,child: Column(
                       children: [
-                        Card(child: ListTile(title:Text("Status :"+ (statusUpdate?"Online":"Offline")),trailing: Switch(
+                        Card(
+                          color:Color.fromARGB(255, 175, 230, 253),
+                          child: ListTile(title:Text("Status :"+ (statusUpdate?"Online":"Offline")),trailing: Switch(
   activeColor: Color.fromARGB(255, 255, 255, 255),
   activeTrackColor: Color.fromARGB(255, 0, 255, 30),
   inactiveThumbColor: Colors.blueGrey.shade600,
   inactiveTrackColor: Colors.grey.shade400,
   splashRadius: 50.0,
   value: statusUpdate,
-  onChanged: (value) => setState(() => statusUpdate = value),
+  onChanged: (value) => setState((){statusUpdate = value;updateStatus();} ),
 ),)),
-Card(child: ListTile(title:Text("Full Name :"+name),)),
-Card(child: ListTile(title:Text("Phone :"+phone),)),
-Card(child: ListTile(title:Text("NIC :"+nic),)),
-Card(child: ListTile(title:Text("District :"+district),)),
-Card(child: ListTile(title:Text("Hospital :"+hospital),)),
+Card( color:Color.fromARGB(255, 175, 230, 253), child: ListTile(leading:Icon(Icons.supervised_user_circle_rounded), title:Text(name),)),
+Card(color:Color.fromARGB(255, 175, 230, 253),child: ListTile(leading:Icon(Icons.phone_android_rounded), title:Text(phone),)),
+Card(color:Color.fromARGB(255, 175, 230, 253),child: ListTile(leading:Icon(Icons.perm_identity_rounded), title:Text(nic),)),
+Card(color:Color.fromARGB(255, 175, 230, 253),child: ListTile(leading:Icon(Icons.location_city_rounded), title:Text(district),)),
+Card(color:Color.fromARGB(255, 175, 230, 253),child: ListTile(leading:Icon(Icons.medical_information_rounded), title:Text(hospital),)),
                       ],
                     ),)),
                     userLoggedIn?buttonGroup():SizedBox(width:300,child: FilledButton(style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue)),onPressed: (){
@@ -159,7 +202,7 @@ Card(child: ListTile(title:Text("Hospital :"+hospital),)),
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-              
+                  
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(50),
                     topRight: Radius.circular(50),
@@ -173,12 +216,14 @@ Card(child: ListTile(title:Text("Hospital :"+hospital),)),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         backgroundColor: Color.fromRGBO(26, 34, 48, 1)!,
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.orange,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.bloodtype), label: "Donate"),
+          BottomNavigationBarItem(icon: Icon(Icons.post_add_rounded), label: "Blogs"),
           //BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: "Blog"),
           BottomNavigationBarItem(
               icon: Icon(Icons.person_2_outlined), label: "Profile"),
@@ -209,6 +254,13 @@ Card(child: ListTile(title:Text("Hospital :"+hospital),)),
           ));
     }
     if (selectedIndex == 2) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => (Posts()),
+          ));
+    }
+    if (selectedIndex == 3) {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

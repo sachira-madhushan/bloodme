@@ -38,6 +38,7 @@ dependencies:
   carousel_slider: ^4.2.1
   shared_preferences: ^2.2.2
   awesome_dialog: ^3.2.0
+  pretty_animated_buttons: ^0.0.1
   youtube: ^1.0.1
   http: ^0.13.4
   rive: ^0.12.4
